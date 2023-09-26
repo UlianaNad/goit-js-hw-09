@@ -6,7 +6,7 @@ function getRandomHexColor() {
 const refs = {
     startButton: document.querySelector('[data-start]'),
     stopButton: document.querySelector('[data-stop]'),
-    body: document.body,
+    body: document.querySelector('body')
 }
 
 
@@ -21,8 +21,11 @@ class ColorChange{
 
         this.timerId = setInterval(() => {
             refs.body.style.backgroundColor = getRandomHexColor();
-            
         }, 1000);
+
+        refs.stopButton.classList.remove('grey');
+        refs.startButton.classList.add('grey');
+
         this.isActive = true;
     }
 
@@ -30,8 +33,12 @@ class ColorChange{
         if(!this.isActive) return;
 
         refs.body.style.backgroundColor = 'white';
+
         clearInterval(this.timerId);
 
+        refs.startButton.classList.remove('grey');
+        refs.stopButton.classList.add('grey');
+        
         this.isActive = false;
     }
 }
