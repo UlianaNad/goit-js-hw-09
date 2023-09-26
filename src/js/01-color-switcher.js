@@ -2,32 +2,46 @@ function getRandomHexColor() {
     return `#${Math.floor(Math.random() * 16777215).toString(16).padStart(6, 0)}`;
 }
 
+
 const refs = {
     startButton: document.querySelector('[data-start]'),
     stopButton: document.querySelector('[data-stop]'),
-    body: document.querySelector('body'),
+    body: document.body,
 }
 
-let timerId = null;
 
+class ColorChange{
+    constructor(){
+        this.timerId = null;
+        this.isActive = false;
+    }
 
-refs.startButton.addEventListener('click', (e) =>{
-    console.log(e.target);
-    timerId = setInterval(() => {
-        refs.body.style.backgroundColor = getRandomHexColor();
-      }, 1000);
+    start(){
+        if(this.isActive) return;
 
-      if(refs.startButton.classList.contains('activated')) return;
-        refs.stopButton.classList.remove('activated');
-        refs.startButton.classList.add('activated');
-       
+        this.timerId = setInterval(() => {
+            refs.body.style.backgroundColor = getRandomHexColor();
+            
+        }, 1000);
+        this.isActive = true;
+    }
+
+    stop(){
+        if(!this.isActive) return;
+
+        refs.body.style.backgroundColor = 'white';
+        clearInterval(this.timerId);
+
+        this.isActive = false;
+    }
+}
+
+const colorChange = new ColorChange;
+
+refs.startButton.addEventListener('click', () =>{
+    colorChange.start();
 });
 
-refs.stopButton.addEventListener('click', (e) =>{
-    clearInterval(timerId);
-    console.log(`Interval with id ${timerId} has stopped!`);
-    if(refs.stopButton.classList.contains('activated')) return;
-        refs.startButton.classList.remove('activated');
-        refs.stopButton.classList.add('activated');
-        
+refs.stopButton.addEventListener('click', () => {
+    colorChange.stop();
 });
